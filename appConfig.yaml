@@ -1,0 +1,7 @@
+---
+eltropycalDB:
+  host: 'cms-staging.clvptsykwwmt.eu-central-1.rds.amazonaws.com'
+  port: '5432'
+  user: 'cms_admin'
+  pass: 'cms_stage_password'
+  name: 'floyd'
