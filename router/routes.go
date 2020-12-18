@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/eltropycal/controllers"
+	"github.com/eltropycal/controllers/restaurants"
 )
 
 // Route structure defining the api routes
@@ -22,9 +23,23 @@ type Routes []Route
 var internalRoutes = Routes{
 	Route{
 		0,
-		"Backend server healthceck API ",
+		"Backend server healthceck API",
 		"GET",
 		"/healthcheck",
 		controllers.WebServerHealthCheck,
+	},
+	Route{
+		0,
+		"List all restaurants API ",
+		"GET",
+		"/restaurants",
+		restaurants.GetAllRestaurants,
+	},
+	Route{
+		0,
+		"Get a restaurant menu API ",
+		"GET",
+		"/restaurant-menu",
+		restaurants.GetRestaurantMenu,
 	},
 }

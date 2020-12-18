@@ -13,3 +13,10 @@ func RespondWithSuccess(w http.ResponseWriter, code int, message string) {
 	w.WriteHeader(code)
 	w.Write(data)
 }
+
+func RespondWithSuccessGeneric(w http.ResponseWriter, code int, body interface{}) {
+	data, _ := json.Marshal(body)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(code)
+	w.Write(data)
+}

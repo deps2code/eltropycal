@@ -11,7 +11,7 @@ func NewRouter() *mux.Router {
 		switch route.AuthMiddleware {
 		case 0:
 			router.Methods(route.Method).
-				Path("/api/" + route.Pattern).
+				Path("/api" + route.Pattern).
 				Name(route.Name).
 				Handler(route.HandlerFunc)
 			break

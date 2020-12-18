@@ -2,8 +2,8 @@ package response
 
 //Response -
 type Response struct {
-	Success bool `json:"success"`
-	Data    Data `json:"data"`
+	Success bool        `json:"success"`
+	Data    interface{} `json:"data"`
 }
 
 type Data struct {
