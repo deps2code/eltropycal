@@ -14,6 +14,11 @@ type PostgresClient struct {
 type IPostgresClient interface {
 	Connect()
 	GetUserDetailsByUsername(string, int) (dbmodels.User, error)
-	GetAllRestuarantList() ([]dbmodels.Restaurant, error)
+	GetAllRestaurantList() ([]dbmodels.Restaurant, error)
 	GetRestaurantMenuItems(string) ([]dbmodels.Food, error)
+	CreateOrder(dbmodels.Order) error
+	GetOrdersOfRestaurant(string) ([]dbmodels.Order, error)
+	GetOrderDetailsByID(string) (dbmodels.Order, error)
+	GetFoodDetailsByID(string) (dbmodels.Food, error)
+	GetRestaurantDetailsByID(string) (dbmodels.Restaurant, error)
 }

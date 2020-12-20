@@ -4,7 +4,7 @@ import (
 	"github.com/eltropycal/models/dbmodels"
 )
 
-func (pc *PostgresClient) GetAllRestuarantList() ([]dbmodels.Restaurant, error) {
+func (pc *PostgresClient) GetAllRestaurantList() ([]dbmodels.Restaurant, error) {
 	query := `SELECT id, name, address, lat, lng from restaurants`
 	rows, err := pc.DB.Query(query)
 	var restaurantList []dbmodels.Restaurant
@@ -40,4 +40,22 @@ func (pc *PostgresClient) GetRestaurantMenuItems(id string) ([]dbmodels.Food, er
 		foodItems = append(foodItems, food)
 	}
 	return foodItems, nil
+}
+
+func (pc *PostgresClient) GetRestaurantDetailsByID(id string) (dbmodels.Restaurant, error) {
+	query := `SELECT id, name, address, lat, lng from restaurants where id=$1`
+	rows, err := pc.DB.Query(query, id)
+	var restaurantDetails dbmodels.Restaurant
+	if err != nil {
+		return restaurantDetails, err
+	}
+	defer rows.Close()
+	if rows.Next() {
+		err = rows.Scan(&restaurantDetails.ID, &restaurantDetails.Name, &restaurantDetails.AddressText, &restaurantDetails.Lat, &restaurantDetails.Lng)
+		if err != nil {
+			return restaurantDetails, err
+		}
+		return restaurantDetails, nil
+	}
+	return restaurantDetails, nil
 }

@@ -14,7 +14,7 @@ import (
 //GetAllRestaurants List all resturants for user to choose
 func GetAllRestaurants(w http.ResponseWriter, r *http.Request) {
 	user := context.Get(r, "userContext")
-	restaurantList, err := controllers.DataService.GetAllRestuarantList()
+	restaurantList, err := controllers.DataService.GetAllRestaurantList()
 	if err != nil {
 		log.WithFields(log.Fields{"api": "GetAllRestaurants", "error": "db_error", "user_id": user.(utils.JWTInputData).UserID}).Error(err.Error())
 		controllers.RespondWithError(w, http.StatusInternalServerError, "Oops, something went wrong.")

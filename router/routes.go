@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/eltropycal/controllers"
+	"github.com/eltropycal/controllers/orders"
 	"github.com/eltropycal/controllers/restaurants"
 )
 
@@ -30,16 +31,37 @@ var internalRoutes = Routes{
 	},
 	Route{
 		0,
-		"List all restaurants API ",
+		"List all restaurants API",
 		"GET",
 		"/restaurants",
 		restaurants.GetAllRestaurants,
 	},
 	Route{
 		0,
-		"Get a restaurant menu API ",
+		"Get a restaurant menu API",
 		"GET",
 		"/restaurant-menu",
 		restaurants.GetRestaurantMenu,
+	},
+	Route{
+		0,
+		"Create order API",
+		"POST",
+		"/order",
+		orders.CreateOrder,
+	},
+	Route{
+		0,
+		"Get orders API",
+		"GET",
+		"/order",
+		orders.GetOrdersList,
+	},
+	Route{
+		0,
+		"Get order estimation API",
+		"GET",
+		"/order-estimation",
+		orders.GetOrderEstimation,
 	},
 }

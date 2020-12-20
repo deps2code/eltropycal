@@ -16,7 +16,7 @@ type LoginRequest struct {
 func (b *LoginRequest) Validate() error {
 	b.Username = strings.TrimSpace(b.Username)
 	if b.Username == "" {
-		return errors.New("sername field is required")
+		return errors.New("username field is required")
 	}
 	b.Password = strings.TrimSpace(b.Password)
 	if b.Password == "" {
