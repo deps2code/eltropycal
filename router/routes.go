@@ -87,4 +87,20 @@ var internalRoutes = Routes{
 		"/order-estimation",
 		orders.GetOrderEstimation,
 	},
+	Route{
+		true,
+		[]int{2, 3},
+		"Update order status API",
+		"POST",
+		"/order-status",
+		orders.UpdateOrderStatus,
+	},
+	Route{
+		true,
+		[]int{3},
+		"Get driver active order API",
+		"GET",
+		"/active-order",
+		orders.GetOrderToDeliver,
+	},
 }

@@ -1,6 +1,7 @@
 package dataservices
 
 import (
+	"database/sql"
 	"time"
 
 	"github.com/eltropycal/models/dbmodels"
@@ -32,10 +33,12 @@ func (pc *PostgresClient) GetUserSession(token string, userID string) (dbmodels.
 	}
 	defer rows.Close()
 	if rows.Next() {
-		err = rows.Scan(&userDetails.UserID, &userDetails.ExpiresAt, &userDetails.RestaurantID)
+		var restaurantID sql.NullString
+		err = rows.Scan(&userDetails.UserID, &userDetails.ExpiresAt, &restaurantID)
 		if err != nil {
 			return userDetails, err
 		}
+		userDetails.RestaurantID = restaurantID.String
 	}
 	return userDetails, nil
 }
@@ -58,4 +61,21 @@ func (pc *PostgresClient) InvalidateUserSession(userID string) error {
 		return err
 	}
 	return nil
+}
+
+func (pc *PostgresClient) GetAvailableDriver() (string, error) {
+	query := `SELECT driver_id from available_drivers where available=true limit 1`
+	rows, err := pc.DB.Query(query)
+	driverID := ""
+	if err != nil {
+		return driverID, err
+	}
+	defer rows.Close()
+	if rows.Next() {
+		err = rows.Scan(&driverID)
+		if err != nil {
+			return driverID, err
+		}
+	}
+	return driverID, nil
 }

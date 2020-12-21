@@ -1,15 +1,22 @@
 package response
 
 type OrderResponse struct {
-	OrderID         string      `json:"order_id"`
-	Items           []OrderItem `json:"items"`
-	DeliveryAddress Address     `json:"address"`
-	User            User        `json:"user"`
+	OrderID           string      `json:"order_id"`
+	Items             []FoodItem  `json:"items"`
+	DeliveryAddress   Address     `json:"address"`
+	User              User        `json:"user"`
+	RestaurantAddress interface{} `json:"restaurant_address,omitempty"`
 }
 
 type OrderItem struct {
 	FoodID   string `json:"id"`
 	Quantity int    `json:"quantity"`
+}
+
+type FoodItem struct {
+	FoodName    string `json:"name"`
+	Description string `json:"description"`
+	Quantity    int    `json:"quantity"`
 }
 
 type Address struct {

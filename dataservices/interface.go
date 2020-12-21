@@ -24,4 +24,8 @@ type IPostgresClient interface {
 	GetUserSession(string, string) (dbmodels.UserSession, error)
 	CreateUserSession(dbmodels.UserSession) error
 	InvalidateUserSession(string) error
+	UpdateOrderStatus(int, string, string) error
+	AssignDriver(string, string) error
+	GetAvailableDriver() (string, error)
+	GetActiveOrderForDriver(string) (dbmodels.ActiveOrder, error)
 }
