@@ -10,11 +10,12 @@ import (
 
 // Route structure defining the api routes
 type Route struct {
-	AuthMiddleware int // 0 = no auth, 1 = Authenticate web session, 2 = authenticate else redirect, 3 = validate app request
-	Name           string
-	Method         string
-	Pattern        string
-	HandlerFunc    http.HandlerFunc
+	Authenticate bool
+	Roles        []int // 1 = restaurant admin, 2 = customer, 3 = driver
+	Name         string
+	Method       string
+	Pattern      string
+	HandlerFunc  http.HandlerFunc
 }
 
 // Routes defines the type Routes which is just an array (slice) of Route structs.
@@ -23,42 +24,64 @@ type Routes []Route
 // Initialize our routes
 var internalRoutes = Routes{
 	Route{
-		0,
+		false,
+		[]int{},
 		"Backend server healthceck API",
 		"GET",
 		"/healthcheck",
 		controllers.WebServerHealthCheck,
 	},
 	Route{
-		0,
+		false,
+		[]int{},
+		"Login API",
+		"POST",
+		"/login",
+		controllers.UserLogin,
+	},
+	Route{
+		true,
+		[]int{1, 2, 3},
+		"Logout API",
+		"POST",
+		"/logout",
+		controllers.UserLogout,
+	},
+	Route{
+		true,
+		[]int{2},
 		"List all restaurants API",
 		"GET",
 		"/restaurants",
 		restaurants.GetAllRestaurants,
 	},
 	Route{
-		0,
+		true,
+		[]int{2},
 		"Get a restaurant menu API",
 		"GET",
 		"/restaurant-menu",
 		restaurants.GetRestaurantMenu,
 	},
 	Route{
-		0,
+		true,
+		[]int{2},
 		"Create order API",
 		"POST",
 		"/order",
 		orders.CreateOrder,
 	},
 	Route{
-		0,
-		"Get orders API",
+		true,
+		[]int{1},
+		"Get orders of Restaurant API",
 		"GET",
-		"/order",
+		"/restaurant-orders",
 		orders.GetOrdersList,
 	},
 	Route{
-		0,
+		true,
+		[]int{2},
 		"Get order estimation API",
 		"GET",
 		"/order-estimation",

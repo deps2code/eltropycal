@@ -21,4 +21,7 @@ type IPostgresClient interface {
 	GetOrderDetailsByID(string) (dbmodels.Order, error)
 	GetFoodDetailsByID(string) (dbmodels.Food, error)
 	GetRestaurantDetailsByID(string) (dbmodels.Restaurant, error)
+	GetUserSession(string, string) (dbmodels.UserSession, error)
+	CreateUserSession(dbmodels.UserSession) error
+	InvalidateUserSession(string) error
 }

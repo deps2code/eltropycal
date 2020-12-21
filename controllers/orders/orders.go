@@ -12,28 +12,29 @@ import (
 	"github.com/eltropycal/models/response"
 	"github.com/eltropycal/utils"
 	"github.com/google/uuid"
+	"github.com/gorilla/context"
 	log "github.com/sirupsen/logrus"
 )
 
 func CreateOrder(w http.ResponseWriter, r *http.Request) {
-	// user := context.Get(r, "userContext")
+	user := context.Get(r, "userContext")
 	var apiReq request.OrderRequest
 	err := json.NewDecoder(r.Body).Decode(&apiReq)
 	if err != nil {
-		log.WithFields(log.Fields{"api": "CreateOrder", "error": "invalid_api_request"}).Error(err.Error())
+		log.WithFields(log.Fields{"api": "CreateOrder", "error": "invalid_api_request", "user_id": user.(utils.UserJWTContext).UserID}).Error(err.Error())
 		controllers.RespondWithError(w, http.StatusBadRequest, "Invalid request body")
 		return
 	}
 
 	if err = apiReq.Validate(); err != nil {
-		log.WithFields(log.Fields{"api": "CreateOrder", "error": "invalid_request_body"}).Error(err.Error())
+		log.WithFields(log.Fields{"api": "CreateOrder", "error": "invalid_request_body", "user_id": user.(utils.UserJWTContext).UserID}).Error(err.Error())
 		controllers.RespondWithError(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	foodItems, err := json.Marshal(apiReq.Items)
 	if err != nil {
-		log.WithFields(log.Fields{"api": "CreateOrder", "error": "invalid_request_body"}).Error(err.Error())
+		log.WithFields(log.Fields{"api": "CreateOrder", "error": "invalid_request_body", "user_id": user.(utils.UserJWTContext).UserID}).Error(err.Error())
 		controllers.RespondWithError(w, http.StatusBadRequest, "food items are not correct")
 		return
 	}
@@ -51,7 +52,7 @@ func CreateOrder(w http.ResponseWriter, r *http.Request) {
 	}
 	err = controllers.DataService.CreateOrder(order)
 	if err != nil {
-		log.WithFields(log.Fields{"api": "CreateOrder", "error": "db_error"}).Error(err.Error())
+		log.WithFields(log.Fields{"api": "CreateOrder", "error": "db_error", "user_id": user.(utils.UserJWTContext).UserID}).Error(err.Error())
 		controllers.RespondWithError(w, http.StatusInternalServerError, "Oops, something went wrong")
 		return
 	}
@@ -62,18 +63,13 @@ func CreateOrder(w http.ResponseWriter, r *http.Request) {
 
 }
 
-//GetAllRestaurants List all resturants for user to choose
+//GetOrdersList List all resturants for user to choose
 func GetOrdersList(w http.ResponseWriter, r *http.Request) {
-	// user := context.Get(r, "userContext")
-	restaurantID, err := uuid.Parse(r.URL.Query().Get("restaurant_id"))
+	user := context.Get(r, "userContext")
+	restaurantID := user.(utils.UserJWTContext).RestaurantID
+	ordersList, err := controllers.DataService.GetOrdersOfRestaurant(restaurantID)
 	if err != nil {
-		log.WithFields(log.Fields{"api": "GetOrdersList", "error": "invalid_request_body", "user_id": /*user.(utils.JWTInputData).UserID*/ ""}).Error(err.Error())
-		controllers.RespondWithError(w, http.StatusBadRequest, "Invalid restaurant id")
-		return
-	}
-	ordersList, err := controllers.DataService.GetOrdersOfRestaurant(restaurantID.String())
-	if err != nil {
-		log.WithFields(log.Fields{"api": "GetOrdersList", "error": "db_error", "user_id": /*user.(utils.JWTInputData).UserID*/ ""}).Error(err.Error())
+		log.WithFields(log.Fields{"api": "GetOrdersList", "error": "db_error", "user_id": user.(utils.UserJWTContext).UserID}).Error(err.Error())
 		controllers.RespondWithError(w, http.StatusInternalServerError, "Oops, something went wrong.")
 		return
 	}
@@ -105,33 +101,33 @@ func GetOrdersList(w http.ResponseWriter, r *http.Request) {
 
 //GetAllRestaurants List all resturants for user to choose
 func GetOrderEstimation(w http.ResponseWriter, r *http.Request) {
-	// user := context.Get(r, "userContext")
+	user := context.Get(r, "userContext")
 	orderID, err := uuid.Parse(r.URL.Query().Get("order_id"))
 	if err != nil {
-		log.WithFields(log.Fields{"api": "GetOrderEstimation", "error": "invalid_request_body", "user_id": /*user.(utils.JWTInputData).UserID*/ ""}).Error(err.Error())
+		log.WithFields(log.Fields{"api": "GetOrderEstimation", "error": "invalid_request_body", "user_id": user.(utils.UserJWTContext).UserID}).Error(err.Error())
 		controllers.RespondWithError(w, http.StatusBadRequest, "Invalid order id")
 		return
 	}
 	orderDetail, err := controllers.DataService.GetOrderDetailsByID(orderID.String())
 	if err != nil {
-		log.WithFields(log.Fields{"api": "GetOrderEstimation", "error": "db_error", "user_id": /*user.(utils.JWTInputData).UserID*/ ""}).Error(err.Error())
+		log.WithFields(log.Fields{"api": "GetOrderEstimation", "error": "db_error", "user_id": user.(utils.UserJWTContext).UserID}).Error(err.Error())
 		controllers.RespondWithError(w, http.StatusInternalServerError, "Oops, something went wrong.")
 		return
 	}
 	if orderDetail.ID == "" {
-		log.WithFields(log.Fields{"api": "GetOrderEstimation", "error": "invalid_request_body", "user_id": /*user.(utils.JWTInputData).UserID*/ ""}).Error(err.Error())
+		log.WithFields(log.Fields{"api": "GetOrderEstimation", "error": "invalid_request_body", "user_id": user.(utils.UserJWTContext).UserID}).Error(err.Error())
 		controllers.RespondWithError(w, http.StatusBadRequest, "Invalid order id")
 		return
 	}
 
 	restaurantDetail, err := controllers.DataService.GetRestaurantDetailsByID(orderDetail.RestaurantID)
 	if err != nil {
-		log.WithFields(log.Fields{"api": "GetOrderEstimation", "error": "db_error", "user_id": /*user.(utils.JWTInputData).UserID*/ ""}).Error(err.Error())
+		log.WithFields(log.Fields{"api": "GetOrderEstimation", "error": "db_error", "user_id": user.(utils.UserJWTContext).UserID}).Error(err.Error())
 		controllers.RespondWithError(w, http.StatusInternalServerError, "Oops, something went wrong.")
 		return
 	}
 	if restaurantDetail.ID == "" {
-		log.WithFields(log.Fields{"api": "GetOrderEstimation", "error": "invalid_request_body", "user_id": /*user.(utils.JWTInputData).UserID*/ ""}).Error(err.Error())
+		log.WithFields(log.Fields{"api": "GetOrderEstimation", "error": "invalid_request_body", "user_id": user.(utils.UserJWTContext).UserID}).Error(err.Error())
 		controllers.RespondWithError(w, http.StatusInternalServerError, "Oops, something went wrong.")
 		return
 	}
@@ -143,7 +139,7 @@ func GetOrderEstimation(w http.ResponseWriter, r *http.Request) {
 	for _, foodItem := range foodItems {
 		foodItemDetails, err := controllers.DataService.GetFoodDetailsByID(foodItem.FoodID)
 		if err != nil {
-			log.WithFields(log.Fields{"api": "GetOrderEstimation", "error": "db_error", "user_id": /*user.(utils.JWTInputData).UserID*/ ""}).Error(err.Error())
+			log.WithFields(log.Fields{"api": "GetOrderEstimation", "error": "db_error", "user_id": user.(utils.UserJWTContext).UserID}).Error(err.Error())
 			controllers.RespondWithError(w, http.StatusInternalServerError, "Oops, something went wrong.")
 			return
 		}

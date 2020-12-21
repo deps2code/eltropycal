@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/eltropycal/models/dbmodels"
 	"github.com/eltropycal/models/request"
 	"github.com/eltropycal/models/response"
 	"github.com/eltropycal/utils"
@@ -58,8 +59,20 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 	//encode user data into an auth token
 	authToken := utils.EncodeJwt(utils.JWTInputData{
 		UserID: userDetails.ID,
-		Role:   userDetails.Role,
+		Role:   apiReq.Role,
 	})
+
+	err = DataService.CreateUserSession(dbmodels.UserSession{
+		UserID:    userDetails.ID,
+		Token:     authToken,
+		CreatedAt: time.Now(),
+		ExpiresAt: time.Now().Add(time.Hour * time.Duration(24)),
+	})
+	if err != nil {
+		log.WithFields(log.Fields{"api": "Login", "error": "db_error"}).Error(err.Error())
+		RespondWithError(w, http.StatusInternalServerError, "Opps, something went wrong.")
+		return
+	}
 
 	log.WithFields(log.Fields{"api": "Login", "user_id": userDetails.ID}).Info("Login successfull")
 	RespondWithSuccessGeneric(w, http.StatusOK, response.Response{

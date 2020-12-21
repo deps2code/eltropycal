@@ -1,6 +1,7 @@
 package router
 
 import (
+	"github.com/eltropycal/middlewares"
 	"github.com/gorilla/mux"
 )
 
@@ -8,14 +9,16 @@ import (
 func NewRouter() *mux.Router {
 	router := mux.NewRouter().StrictSlash(true)
 	for _, route := range internalRoutes {
-		switch route.AuthMiddleware {
-		case 0:
+		if route.Authenticate {
+			router.Methods(route.Method).
+				Path("/api" + route.Pattern).
+				Name(route.Name).
+				Handler(middlewares.Validate(route.HandlerFunc, route.Roles))
+		} else {
 			router.Methods(route.Method).
 				Path("/api" + route.Pattern).
 				Name(route.Name).
 				Handler(route.HandlerFunc)
-			break
-
 		}
 	}
 	return router
