@@ -1,1 +1,6 @@
-# eltropycal
+# Eltropycal 
+## Restaurant management software
+
+
+
+
