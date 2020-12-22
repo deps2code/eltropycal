@@ -95,7 +95,7 @@ func GenerateOrderInvoice(w http.ResponseWriter, r *http.Request) {
 	}
 	invoiceResp := response.InvoiceResponse{
 		CreatedAt: time.Now().Format(time.RFC3339),
-		Link:      "http://ec2-15-207-54-142.ap-south-1.compute.amazonaws.com:9090/" + filename,
+		Link:      "http://ec2-15-207-54-142.ap-south-1.compute.amazonaws.com:9090/" + filename + ".pdf",
 	}
 	controllers.RespondWithSuccessGeneric(w, http.StatusOK, response.Response{
 		Success: true,
