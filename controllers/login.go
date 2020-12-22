@@ -46,7 +46,7 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 	isUserAuthenticated, err := utils.ComparePasswordHash(userDetails.HashedPassword, apiReq.Password)
 	if err != nil {
 		log.WithFields(log.Fields{"api": "Login", "error": "module_error"}).Error(err.Error())
-		RespondWithError(w, http.StatusInternalServerError, "Opps, something went wrong.")
+		RespondWithError(w, http.StatusUnauthorized, "Incorrect password.")
 		return
 	}
 

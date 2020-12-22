@@ -80,6 +80,7 @@ func GetOrdersList(w http.ResponseWriter, r *http.Request) {
 	for _, order := range ordersList {
 		var orderRespItem response.OrderResponse
 		orderRespItem.OrderID = order.ID
+		orderRespItem.Status = order.Status
 		orderRespItem.User = response.User{
 			ID:   order.UserID,
 			Name: order.UserName,
@@ -257,6 +258,7 @@ func GetOrderToDeliver(w http.ResponseWriter, r *http.Request) {
 	}
 	var orderRespItem response.OrderResponse
 	orderRespItem.OrderID = order.ID
+	orderRespItem.Status = order.Status
 	orderRespItem.User = response.User{
 		ID:   order.UserID,
 		Name: order.UserName,

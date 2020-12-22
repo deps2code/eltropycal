@@ -91,7 +91,7 @@ func (pc *PostgresClient) AssignDriver(driverID string, orderID string) error {
 
 func (pc *PostgresClient) GetActiveOrderForDriver(driverID string) (dbmodels.ActiveOrder, error) {
 	query := `SELECT o.id, o.user_id, o.restaurant_id, o.status, o.delivery_address_text, o.delivery_address_lat, o.delivery_address_lng, o.created_at, o.updated_at, o.items,
-	u.username, r.address, r.lat, r.lng from orders o join users u on o.user_id=u.id join restaurants r on r.id=o.restaurant_id where o.driver_id=$1 and o.status < 3 order by o.created_at desc limit 1`
+	u.username, r.address, r.lat, r.lng from orders o join users u on o.user_id=u.id join restaurants r on r.id=o.restaurant_id where o.driver_id=$1 and o.status < 3 and o.status > 0 order by o.created_at desc limit 1`
 	rows, err := pc.DB.Query(query, driverID)
 	order := dbmodels.ActiveOrder{}
 	if err != nil {

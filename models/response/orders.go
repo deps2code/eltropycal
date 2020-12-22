@@ -5,6 +5,7 @@ type OrderResponse struct {
 	Items             []FoodItem  `json:"items"`
 	DeliveryAddress   Address     `json:"address"`
 	User              User        `json:"user"`
+	Status            int         `json:"status"`
 	RestaurantAddress interface{} `json:"restaurant_address,omitempty"`
 }
 
