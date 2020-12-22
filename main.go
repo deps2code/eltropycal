@@ -58,6 +58,7 @@ func initializeLogrus() {
 
 func startServer(port string) {
 	r := router.NewRouter()
+	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
 	http.Handle("/", promhttp.InstrumentHandlerCounter(prometheus.AllMetrics.HttpRequestsTotal, r))
 	http.Handle("/metrics", promhttp.Handler())
 	log.Info("Starting HTTP service at " + port)
