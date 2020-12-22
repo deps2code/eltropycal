@@ -105,6 +105,7 @@ func GetOrdersList(w http.ResponseWriter, r *http.Request) {
 					FoodName:    foodItemDetails.Name,
 					Description: foodItemDetails.Description,
 					Quantity:    foodItem.Quantity,
+					Price:       foodItemDetails.UnitRateRupees,
 				})
 			}
 		}
@@ -288,6 +289,7 @@ func GetOrderToDeliver(w http.ResponseWriter, r *http.Request) {
 				FoodName:    foodItemDetails.Name,
 				Description: foodItemDetails.Description,
 				Quantity:    foodItem.Quantity,
+				Price:       foodItemDetails.UnitRateRupees,
 			})
 		}
 	}

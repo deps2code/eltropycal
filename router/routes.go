@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/eltropycal/controllers"
+	"github.com/eltropycal/controllers/invoice"
 	"github.com/eltropycal/controllers/orders"
 	"github.com/eltropycal/controllers/restaurants"
 )
@@ -102,5 +103,13 @@ var internalRoutes = Routes{
 		"GET",
 		"/active-order",
 		orders.GetOrderToDeliver,
+	},
+	Route{
+		true,
+		[]int{1},
+		"Get Order invoice link API",
+		"GET",
+		"/order-invoice",
+		invoice.GenerateOrderInvoice,
 	},
 }

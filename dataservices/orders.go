@@ -34,7 +34,7 @@ func (pc *PostgresClient) GetOrdersOfRestaurant(id string) ([]dbmodels.Order, er
 }
 
 func (pc *PostgresClient) GetOrderDetailsByID(id string) (dbmodels.Order, error) {
-	query := `SELECT id, user_id, restaurant_id, driver_id, status, delivery_address_text, delivery_address_lat, delivery_address_lng, created_at, updated_at, items from orders where id=$1`
+	query := `SELECT o.id, o.user_id, u.username, o.restaurant_id, o.driver_id, o.status, o.delivery_address_text, o.delivery_address_lat, o.delivery_address_lng, o.created_at, o.updated_at, o.items from orders o join users u on o.user_id=u.id where o.id=$1`
 	rows, err := pc.DB.Query(query, id)
 	order := dbmodels.Order{}
 	if err != nil {
@@ -42,7 +42,7 @@ func (pc *PostgresClient) GetOrderDetailsByID(id string) (dbmodels.Order, error)
 	}
 	defer rows.Close()
 	if rows.Next() {
-		err = rows.Scan(&order.ID, &order.UserID, &order.RestaurantID, &order.DriverID, &order.Status, &order.DeliveryAddressText, &order.DeliveryAddressLat, &order.DeliveryAddressLng, &order.CreatedAt, &order.UpdatedAt, &order.Items)
+		err = rows.Scan(&order.ID, &order.UserID, &order.UserName, &order.RestaurantID, &order.DriverID, &order.Status, &order.DeliveryAddressText, &order.DeliveryAddressLat, &order.DeliveryAddressLng, &order.CreatedAt, &order.UpdatedAt, &order.Items)
 		if err != nil {
 			return order, err
 		}
