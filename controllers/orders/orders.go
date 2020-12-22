@@ -294,6 +294,7 @@ func GetOrderToDeliver(w http.ResponseWriter, r *http.Request) {
 		Success: true,
 		Data:    orderRespItem,
 	})
+	return
 }
 
 func assignDriverToOrder(orderID string, user interface{}) {

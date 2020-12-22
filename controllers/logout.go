@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/eltropycal/utils"
-	"github.com/floyd/controllers"
 	"github.com/gorilla/context"
 	log "github.com/sirupsen/logrus"
 )
@@ -17,6 +16,6 @@ func UserLogout(w http.ResponseWriter, r *http.Request) {
 		RespondWithError(w, http.StatusInternalServerError, "Opps, something went wrong.")
 		return
 	}
-	controllers.RespondWithSuccess(w, http.StatusOK, "Successfully logged out")
+	RespondWithSuccess(w, http.StatusOK, "Successfully logged out")
 	return
 }
